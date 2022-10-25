@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
-import { ImageContainer, SuccessContainer } from "../styles/pages/success";
+import { ImageContainer, ImageWrapper, SuccessContainer } from "../styles/pages/success";
 
 interface SuccessProps {
     customerName: string;
@@ -15,6 +15,13 @@ interface SuccessProps {
 }
 
 export default function Success({ customerName, product }: SuccessProps){
+    //Só para teste de interface console.log
+    const arr = [
+        {id: 1, item: product},
+        {id: 2, item: product},
+        {id: 3, item: product},
+        {id: 4, item: product},
+    ]
     return (
         <>
             <Head>
@@ -23,12 +30,18 @@ export default function Success({ customerName, product }: SuccessProps){
             </Head>
             
             <SuccessContainer>
+                <ImageWrapper>
+                    {arr.map((item) => {
+                        return (
+                            <ImageContainer key={item.id}>
+                                <Image src={item.item.imageUrl} width={140} height={140} alt=''/>
+                            </ImageContainer>
+                        )
+                    })}
+                </ImageWrapper>
+            
                 <h1>Compra Efetuada</h1>
 
-                <ImageContainer>
-                    <Image src={product.imageUrl} width={120} height={110} alt=''/>
-                </ImageContainer>
-            
                 <p>Uhull <strong>{customerName}</strong>, sua <strong>{product.name}</strong> já está a caminho da sua casa.</p>
             
                 <Link href='/'>

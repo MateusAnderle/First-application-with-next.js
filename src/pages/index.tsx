@@ -1,10 +1,11 @@
 import Head from "next/head";
 import Image from "next/future/image";
-import { HomeContainer, Product } from "../styles/pages/home";
+import { HomeContainer, Product, CartIcon } from "../styles/pages/home";
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { GetStaticProps } from "next";
 import Link from "next/link";
+import WhiteCart from '../assets/whiteCart.svg';
 
 import { stripe } from "../lib/stripe";
 import Stripe from "stripe";
@@ -40,8 +41,13 @@ export default function Home({products}: HomeProps) {
                 <Image src={product.imageUrl} width={520} height={480} alt={""}/>
 
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.price}</span>
+                  </div>
+                  <CartIcon>
+                    <Image className="teste" src={WhiteCart} alt=""/>
+                  </CartIcon>
                 </footer>
               </Product>
             </Link>

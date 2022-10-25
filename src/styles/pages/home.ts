@@ -42,6 +42,12 @@ export const Product = styled('a', {
         opacity: 0,
         transition: 'all 0.2s ease-in-out',
 
+        div: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+
+
         strong: {
             fontSize: '$lg',
             color: '$gray100'
@@ -61,3 +67,14 @@ export const Product = styled('a', {
         }
     }
 });
+
+export const CartIcon = styled('div', {
+    display: "flex",
+    width: 48,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: '$green500',
+    borderRadius: 8,
+    cursor: "pointer",
+})
