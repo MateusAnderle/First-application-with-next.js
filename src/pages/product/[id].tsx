@@ -3,8 +3,9 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/future/image";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Stripe from "stripe";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { stripe } from "../../lib/stripe";
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product";
 
@@ -21,12 +22,15 @@ interface ProductProps {
 
 export default function Product({ product }: ProductProps){
     const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false);
+    const [cartData, setCartData] = useState([]);
     const { isFallback } = useRouter();
+    const { saveToLocalStorage, loadLocalStorage } = useLocalStorage();
 
     if (isFallback) {
         return <p>Loading...</p>
     }
 
+/* FUNÇÂO PARA STRIPE */
     async function handleBuyProduct(){
         try {
             setIsCreatingCheckoutSession(true)
@@ -43,6 +47,33 @@ export default function Product({ product }: ProductProps){
             alert('Falha ao redirecionar ao checkout')
         }
     }
+//////////////////////////////
+
+    function handleLocalStorage(){
+        const duplicateProduct = cartData.find(item => item.id === product.id);
+
+        /*if(duplicateProduct){
+            return alert('Item já foi adicionado ao carrinho')
+        }*/
+
+        setCartData([...cartData, 
+            {
+                defaultPriceId: product.defaultPriceId,
+                description: product.description,
+                id: product.id,
+                imageUrl: product.imageUrl,
+                name: product.name,
+                price: product.price,
+            }
+        ]);
+        saveToLocalStorage(cartData, '@ignite-shop:cart')
+    }
+
+    useEffect(()=>{
+        const dataFetched = loadLocalStorage('@ignite-shop:cart');
+        dataFetched === undefined || null ? setCartData([]) : setCartData(dataFetched) 
+    },[])
+
 
     return (
         <>
@@ -61,7 +92,7 @@ export default function Product({ product }: ProductProps){
 
                     <p>{product.description}</p>
 
-                    <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>Comprar agora</button>
+                    <button disabled={isCreatingCheckoutSession} onClick={handleLocalStorage}>Adicionar ao carrinho</button>
                 </ProductDetails>
             </ProductContainer>
         </>

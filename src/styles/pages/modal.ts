@@ -50,6 +50,14 @@ export const TotalTexts = styled('div', {
         fontSize: '$lg',
         marginBottom: '55px',
     },
+
+    p:{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: '100%',
+        cursor: 'pointer',
+    }
 });
 
 export const ModalCard = styled('div', {

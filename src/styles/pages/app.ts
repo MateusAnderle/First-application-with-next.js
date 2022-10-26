@@ -25,21 +25,19 @@ export const Header = styled('header', {
 
 
 export const DivNotification = styled('div', {
-    '&:after': {
-        content: '2',
+
+    span: {
+        position: 'absolute',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         width: '23px',
         height: '23px',
+        top: 28,
+        right: -10,
         borderRadius: '50%',
-        display: 'flex',
-        position: 'absolute',
-        top: '30px',
-        right: '-10px',
-        background: '$green500',
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontWeight: 'bold',
-        fontSize: '0.75rem',
-        textAlign: 'center',
-    }
+        backgroundColor: '$green500',
+        color: '$white',
+        fontSize: 14,
+    },
 })
