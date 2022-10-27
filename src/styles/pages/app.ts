@@ -8,7 +8,7 @@ export const Container = styled('div', {
     minHeight: '100vh',
 })
 
-export const Header = styled('header', {
+export const HeaderStyle = styled('header', {
     display: "flex",
     justifyContent: 'space-between',
     alignItems: "center",

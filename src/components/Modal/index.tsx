@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ContentWrapper, ImageModalCard, ModalCard, ModalCardContent, ModalContainer, TotalTexts, TotalWrapper } from "../../styles/pages/modal";
 import Image from "next/future/image";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { DataContext } from "../../contexts/DataContext";
 
 export default function Modal(){
     const { clearLocalStorage, loadLocalStorage, saveToLocalStorage } = useLocalStorage();
     const [cartData, setCartData] = useState([]);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const {  } = useContext(DataContext);
 
     function clearCart(){
         clearLocalStorage();
