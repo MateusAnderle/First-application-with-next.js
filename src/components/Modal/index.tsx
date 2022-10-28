@@ -3,12 +3,28 @@ import { ContentWrapper, ImageModalCard, ModalCard, ModalCardContent, ModalConta
 import Image from "next/future/image";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { DataContext } from "../../contexts/DataContext";
+import axios from "axios";
 
 export default function Modal(){
-    const { clearLocalStorage, loadLocalStorage, saveToLocalStorage } = useLocalStorage();
-    const [cartData, setCartData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const {  } = useContext(DataContext);
+    const { clearLocalStorage, saveToLocalStorage } = useLocalStorage();
+    const { fetchData, cartData, setCartData, loading, setLoading } = useContext(DataContext);
+
+    async function handleBuyProduct(){
+        try {
+            const response = await axios.post('/api/checkout', {
+                priceId: cartData[0].defaultPriceId,
+            })
+
+            const { checkoutUrl } = response.data;
+
+            window.location.href = checkoutUrl;
+
+        } catch (error) {
+            alert('Falha ao redirecionar ao checkout')
+        } finally {
+            clearLocalStorage();
+        }
+    }
 
     function clearCart(){
         clearLocalStorage();
@@ -25,9 +41,7 @@ export default function Modal(){
     }
 
     useEffect(()=>{
-        const dataFetched = loadLocalStorage('@ignite-shop:cart');
-        dataFetched === undefined ? setCartData([]) : setCartData(dataFetched) 
-        
+        fetchData();
     },[loading])
 
     return (
@@ -70,7 +84,7 @@ export default function Modal(){
                     <p onClick={clearCart}><span>Limpar carrinho</span></p>
                 </TotalTexts>
 
-                <button>Finalizar compra</button>
+                <button onClick={handleBuyProduct}>Finalizar compra</button>
             </TotalWrapper>          
         </ModalContainer>
     )

@@ -21,7 +21,8 @@ export function DataContextProvider({children}){
             fetchData,
             cartData,
             loading, 
-            setLoading
+            setLoading,
+            setCartData
           }}
         >
             {children}

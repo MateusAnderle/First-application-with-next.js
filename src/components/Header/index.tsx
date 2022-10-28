@@ -18,8 +18,8 @@ export default function Header(){
     };
   
     useEffect(()=>{
-        fetchData()
-    },[isMenuOpen])
+        fetchData();
+    },[])
 
     return (
         <>

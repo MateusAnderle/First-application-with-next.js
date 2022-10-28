@@ -3,8 +3,9 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/future/image";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Stripe from "stripe";
+import { DataContext } from "../../contexts/DataContext";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { stripe } from "../../lib/stripe";
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product";
@@ -21,41 +22,16 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps){
-    const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false);
     const [cartData, setCartData] = useState([]);
     const { isFallback } = useRouter();
     const { saveToLocalStorage, loadLocalStorage } = useLocalStorage();
+    const { setLoading, loading } = useContext(DataContext);
 
     if (isFallback) {
         return <p>Loading...</p>
     }
 
-/* FUNÇÂO PARA STRIPE */
-    async function handleBuyProduct(){
-        try {
-            setIsCreatingCheckoutSession(true)
-            const response = await axios.post('/api/checkout', {
-                priceId: product.defaultPriceId,
-            })
-
-            const { checkoutUrl } = response.data;
-
-            window.location.href = checkoutUrl;
-
-        } catch (error) {
-            setIsCreatingCheckoutSession(false)
-            alert('Falha ao redirecionar ao checkout')
-        }
-    }
-//////////////////////////////
-
-    function handleLocalStorage(){
-        const duplicateProduct = cartData.find(item => item.id === product.id);
-
-        /*if(duplicateProduct){
-            return alert('Item já foi adicionado ao carrinho')
-        }*/
-
+    function handleLocalStorage(product){
         setCartData([...cartData, 
             {
                 defaultPriceId: product.defaultPriceId,
@@ -66,14 +42,19 @@ export default function Product({ product }: ProductProps){
                 price: product.price,
             }
         ]);
-        saveToLocalStorage(cartData, '@ignite-shop:cart')
+
+        if(cartData.length === 0){
+            return
+        }
+
+        setLoading(!loading);
+        saveToLocalStorage(cartData, '@ignite-shop:cart');
     }
 
     useEffect(()=>{
         const dataFetched = loadLocalStorage('@ignite-shop:cart');
         dataFetched === undefined || null ? setCartData([]) : setCartData(dataFetched) 
     },[])
-
 
     return (
         <>
@@ -92,7 +73,7 @@ export default function Product({ product }: ProductProps){
 
                     <p>{product.description}</p>
 
-                    <button disabled={isCreatingCheckoutSession} onClick={handleLocalStorage}>Adicionar ao carrinho</button>
+                    <button onClick={() => handleLocalStorage(product)}>Adicionar ao carrinho</button>
                 </ProductDetails>
             </ProductContainer>
         </>
